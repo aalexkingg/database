@@ -1,4 +1,4 @@
-import mysql.connector
+import sqlite3
 
 # TODO:
 #   Comments
@@ -19,13 +19,12 @@ import mysql.connector
 #       truncate
 #       unlock
 
-in
+db_file = r"./db.db"
+
+
 class Database:
     def __init__(self, user, password, host, database):
-        self.connection = mysql.connector.connect(user=user,
-                                                  password=password,
-                                                  host=host,
-                                                  database=database)
+        self.connection = sqlite3.connect(db_file)
         self.cursor = self.connection.cursor()
 
     def close(self):
