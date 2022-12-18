@@ -19,7 +19,7 @@ import mysql.connector
 #       truncate
 #       unlock
 
-
+in
 class Database:
     def __init__(self, user, password, host, database):
         self.connection = mysql.connector.connect(user=user,
