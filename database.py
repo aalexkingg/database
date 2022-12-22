@@ -1,4 +1,5 @@
 import sqlite3
+from dataclasses import dataclass, field
 
 # TODO:
 #   Comments
@@ -19,13 +20,16 @@ import sqlite3
 #       truncate
 #       unlock
 
-db_file = r"./db.db"
-
+# Should  be able to be used by people who do not know SQL very well
+# Add lamen terms functions
 
 class Database:
-    def __init__(self, user, password, host, database):
+    def __init__(self, db_file):
         self.connection = sqlite3.connect(db_file)
         self.cursor = self.connection.cursor()
+
+    def help(self):
+        pass
 
     def close(self):
         self.connection.close()
@@ -37,6 +41,9 @@ class Database:
         :param kwargs:
         :return: None
         """
+
+        # kwargs can be replaced using functions/variables etc
+
         # Create fields from kwargs
         fields = ", ".join(names + " " + types for names, types in kwargs.items())
 
@@ -47,6 +54,7 @@ class Database:
         self.connection.commit()
         #self.connection.close()
 
+    # Link to something called "add data" or something
     def insert(self, tablename, **kwargs):
         """
         Adds data to table
@@ -77,38 +85,51 @@ class Database:
         self.connection.commit()
         #self.connection.close()
 
+    # structuring where and select
+    # could use inheritance
+    # could use decorators
+    # first need to figure out proper structure
+    # then can use that to figure out which method will work
 
-class Select:
-    def __init__(self, tablename, extract):
-        self.tablename = tablename
-        self.extract = extract
+    class Select:
+        def __init__(self, tablename, *args):
+            self.tablename = tablename
+            self.extracts = args
 
-    def where(self, **kwargs):
-        print(f"{self.tablename} and {self.extract} and {kwargs}")
+        def where(self, **kwargs):
+            self.Where(**kwargs)
 
-    def like(self):
-        pass
+        class Where:
+            def __init__(self, **kwargs):
+                #fields = ", ".join(field for field in kwargs.keys())
 
-    def natural_join(self):
-        pass
+                #values = ", ".join("'" + value + "'" for value in kwargs.values())
 
-    def join_on(self):
-        pass
+                print(f"SELECT {', '.join()} FROM {self.tablename} WHERE {kwargs}")
 
-    def join_as(self):
-        pass
+            def like(self):
+                pass
 
-    def group_by(self):
-        pass
+            def match_against(self):
+                pass
 
-    def order_by(self):
-        pass
+        def limit(self):
+            ...
 
-    def match_against(self):
-        pass
+        def natural_join(self):
+            pass
 
-    def limit(self):
-        pass
+        def join_on(self):
+            pass
+
+        def join_as(self):
+            pass
+
+        def group_by(self):
+            pass
+
+        def order_by(self):
+            pass
 
 
 class Alter:
@@ -148,39 +169,21 @@ class Update:
     def where(self):
         pass
 
-# TODO:
-#   Record:
-#       -
 
-
+#  can be called when record is being made
 class Record:
-
     def __init__(self, **fields):
-
-        self.activityID = fields['ActivityID']
-        self.moduleName = fields['ModuleName']
-        self.completionState = fields['CompletionState']
-        self.weekNumber = fields['WeekNumber']
-        self.courseID = fields['CourseID']
-        self.sectionID = fields['SectionID']
-        self.deadline = fields['Deadline']
-        self.activityType = fields['ActivityType']
+        ...
 
     def InsertRecord(self, table):
-
-        __insert__(table = table,
-                    activityID = self.activityID,
-                    moduleName = self.moduleName,
-                    completionState = self.completionState,
-                    weekNumber = self.weekNumber,
-                    courseID = self.courseID,
-                    sectionID = self.sectionID,
-                    deadline = self.deadline,
-                    activityType = self.activityType)
 
         Database.insert()
 
 
+
+# potentially useless - can just translate from default python variables
+# can get data type (int, str), then find length and assign to small, medium, long etc
+# Can use dataclasses for datatype definitions
 class DataType:
 
     def char(self, n):
@@ -390,3 +393,7 @@ class DataType:
         :return:
         """
         ...
+
+
+if __name__ == "__main__":
+    ...

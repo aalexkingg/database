@@ -1,10 +1,12 @@
 import database
-from database import Database, DataType
+from database import Database
 
-db = Database('root', '', 'localhost', 'python')
+db_file = r"./db.db"
 
-#db.create_table('test2', name="varchar(128) not null", id="int")
+db = Database(db_file)
+
+
+#db.create_table('test1', name="varchar(128) not null", id="int")
 #db.insert("test1", name="alex", id="301")
 
-database.select("test1", "extract").where(name="name")
-db.select().where()
+db.Select("table1", "var1, var2, var3").where(name="alex", age=19)
