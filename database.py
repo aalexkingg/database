@@ -23,6 +23,16 @@ from dataclasses import dataclass, field
 # Should  be able to be used by people who do not know SQL very well
 # Add lamen terms functions
 
+def execute(func):
+    def inner(self, *args, **kwargs):
+
+        print("before")
+        x = func(self, *args, **kwargs)
+        print("after")
+
+        return x
+    return inner
+
 class Database:
     def __init__(self, db_file):
         self.connection = sqlite3.connect(db_file)
@@ -85,52 +95,72 @@ class Database:
         self.connection.commit()
         #self.connection.close()
 
+
     # structuring where and select
     # could use inheritance
     # could use decorators
     # first need to figure out proper structure
     # then can use that to figure out which method will work
 
+    @execute
     class Select:
-        def __init__(self, tablename, *args):
-            self.tablename = tablename
-            self.extracts = args
+        def __init__(self, *args, **kwargs):
 
-        def where(self, **kwargs):
-            self.Where(**kwargs)
+            print("here1")
 
+            self.table = kwargs['tablename']
+            self.extracts = ', '.join(args[1:])
+
+            global query
+            query = f"SELECT {self.extracts} FROM {self.table}"
+
+        @execute
         class Where:
-            def __init__(self, **kwargs):
-                #fields = ", ".join(field for field in kwargs.keys())
 
-                #values = ", ".join("'" + value + "'" for value in kwargs.values())
+            def __init__(self, *args, **kwargs):
 
-                print(f"SELECT {', '.join()} FROM {self.tablename} WHERE {kwargs}")
+                fields = list(kwargs.keys())
+                values = list(kwargs.values())
+                conditions = " AND ".join(str(fields[i]) + "=\'" + str(values[i]) + "\'" for i in range(len(fields)))
 
-            def like(self):
-                pass
+                global query
+                query += f" WHERE {conditions}"
 
-            def match_against(self):
-                pass
+                print(query)
 
-        def limit(self):
-            ...
+                #print(f"SELECT {extracts} FROM {table} WHERE {conditions}")
 
-        def natural_join(self):
-            pass
 
-        def join_on(self):
-            pass
 
-        def join_as(self):
-            pass
 
-        def group_by(self):
-            pass
 
-        def order_by(self):
-            pass
 
+
+"""
+def like(self):
+    pass
+
+def match_against(self):
+    pass
+
+def limit(self):
+    ...
+
+def natural_join(self):
+    pass
+
+def join_on(self):
+    pass
+
+def join_as(self):
+    pass
+
+def group_by(self):
+    pass
+
+def order_by(self):
+    pass
+"""
 
 class Alter:
     """Alters structure of database"""
